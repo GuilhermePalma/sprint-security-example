@@ -24,3 +24,12 @@ seria:
 ### Bibliotecas Externas
 
 Sempre manter as depedencias atualizadas para que englobe as novas versões com as correções de antigos BUGS.
+
+## Referencias
+
+- Instalações e Dependencias
+  - [Spring Doc - Swagger](https://springdoc.org)
+  - ["Hello Word" com Spring Doc](https://www.javainuse.com/spring/boot_swagger3)
+  - [Spring Doc com Spring Security](https://www.javainuse.com/spring/boot_swaggersec)
+- Guias e Tutoriais
+  - [Curso Spring Security - Basic Auth](https://www.youtube.com/watch?v=t6prPki7daU)

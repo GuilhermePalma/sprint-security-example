@@ -1,0 +1,22 @@
+envName: DEPLOY
+
+spring:
+  h2:
+    console.enabled: true
+    spring.h2.console.settings.web-allow-others: false
+
+  datasource:
+    url: jdbc:h2:file:./database/backup_data;MODE=MySQL
+    username: admin
+    password: admin
+    driverClassName: org.h2.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+
+springdoc:
+  api-docs.path: /swagger-docs
+  swagger-ui.path: /swagger-ui
+  swagger-ui.configUrl: /swagger-ui-configuration
