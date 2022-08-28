@@ -1,14 +1,10 @@
 # Spring Security Example
 
+- `@EnableWebSecurity`: Sobrescreve as Configurações padrões do Spring Security pelas Configurações criadas na Classe
+
 ## Basic Auth
 
 Se trata de uma autenticação feita pelo servidor usando um encode a partir do `username` e `password` do usuario
-
-### Status Code
-
-- 401 `Unauthorized`: Não logado e esperando receber as credenciais de autorização
-- 403 `Forbidden`: Logado, mas sem autorização para o recurso
-
 
 ## Vulnerabilidades em Sistemas Web
 
@@ -19,7 +15,12 @@ usuarios consigam acessar dados que ele não possui acesso. Dessa forma a difere
 seria:
 
 - Autenticação: Obter as credenciais do usuarios, validar o Login e permitir as suas ações
+    - Quando falhar, será apresentado o **Status Code** 401 `Unauthorized`: Não logado e esperando receber as
+      credenciais de autorização
 - Autorização: Determina a quais rotas/acessos o usuario possui no sistema
+    - Quando falhar, será apresentado o **Status Code** 403 `Forbidden`: Logado, mas sem autorização para o recurso
+    - Por padrão no `Spring Security`, não é suficiente estar autenticado para realizar requesições `POST`/`DELETE`.
+      Isso ocorre por conta da segurança contra `CSFR` habilitada por padrão.
 
 ### Bibliotecas Externas
 
@@ -28,8 +29,8 @@ Sempre manter as depedencias atualizadas para que englobe as novas versões com 
 ## Referencias
 
 - Instalações e Dependencias
-  - [Spring Doc - Swagger](https://springdoc.org)
-  - ["Hello Word" com Spring Doc](https://www.javainuse.com/spring/boot_swagger3)
-  - [Spring Doc com Spring Security](https://www.javainuse.com/spring/boot_swaggersec)
+    - [Spring Doc - Swagger](https://springdoc.org)
+    - ["Hello Word" com Spring Doc](https://www.javainuse.com/spring/boot_swagger3)
+    - [Spring Doc com Spring Security](https://www.javainuse.com/spring/boot_swaggersec)
 - Guias e Tutoriais
-  - [Curso Spring Security - Basic Auth](https://www.youtube.com/watch?v=t6prPki7daU)
+    - [Curso Spring Security - Basic Auth](https://www.youtube.com/watch?v=t6prPki7daU)
