@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -15,7 +16,7 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "\"user\"")
-public class User implements UserDetails {
+public class User implements UserDetails, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -61,8 +62,4 @@ public class User implements UserDetails {
         return this.password;
     }
 
-    @Override
-    public String getUsername(){
-        return this.getUsername();
-    }
 }

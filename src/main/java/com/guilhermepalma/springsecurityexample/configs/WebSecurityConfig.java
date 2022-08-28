@@ -1,12 +1,10 @@
 package com.guilhermepalma.springsecurityexample.configs;
 
-import org.springframework.context.annotation.Bean;
+import com.guilhermepalma.springsecurityexample.utis.Utils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * Classe de Configuração do Spring Security. Extendendo as Configurações da classe depreciada
@@ -42,12 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // auth.inMemoryAuthentication().withUser("admin").password(passwordEncoder().encode("102030")).roles("ADMIN");
 
         // Utiliza da Classe UserDetailsService para realizar a autenticação
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        auth.userDetailsService(userDetailsService).passwordEncoder(Utils.passwordEncoder());
     }
 
 }

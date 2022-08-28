@@ -33,4 +33,5 @@ Sempre manter as depedencias atualizadas para que englobe as novas versões com 
     - ["Hello Word" com Spring Doc](https://www.javainuse.com/spring/boot_swagger3)
     - [Spring Doc com Spring Security](https://www.javainuse.com/spring/boot_swaggersec)
 - Guias e Tutoriais
-    - [Curso Spring Security - Basic Auth](https://www.youtube.com/watch?v=t6prPki7daU)
+    - [MICHELLI BRITO: Curso Spring Security - Basic Auth](https://www.youtube.com/watch?v=t6prPki7daU)
+    - [DANIELE LEÃO: Autenticação e Autorização - Basic Auth](https://www.youtube.com/watch?v=pkIEV2Yls_8)
