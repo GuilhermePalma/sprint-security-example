@@ -8,7 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@OpenAPIDefinition(servers = @Server(url = "localhost:8080", description = "Local Java Server"),
+@OpenAPIDefinition(servers = @Server(url = "http://localhost:8080", description = "Local Java Server"),
         info = @Info(title = "Spring Security Example API", version = "1.0",
                 contact = @Contact(name = "Guilherme Palma", email = "guippalma@gmail.com", url = "github.com/GuilhermePalma"),
                 description = "Example APP using Spring Security, Authentication, Authorization and JWT"))
