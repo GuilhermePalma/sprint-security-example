@@ -8,6 +8,7 @@ import com.guilhermepalma.springsecurityexample.dto.exceptions.NotFoundException
 import com.guilhermepalma.springsecurityexample.services.UserService;
 import com.guilhermepalma.springsecurityexample.utis.Utils;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class UserController {
     }
 
     @Operation(summary = "Create user")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @PostMapping(value = "v1/user/create", produces = "application/json")
     public CreatedDTO<User> createUsers(@RequestBody Payload<User> users) throws Exception {
         if (Utils.isNullOrEmpty(users.getData())) {
@@ -52,6 +54,7 @@ public class UserController {
     }
 
     @Operation(summary = "Get Users")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("v1/user")
     public ListView<User> getAllUsers(@RequestParam(required = false) List<UUID> userId,
                                       @RequestParam(required = false) List<String> username,

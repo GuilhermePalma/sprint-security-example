@@ -1,52 +1,32 @@
 package com.guilhermepalma.springsecurityexample.configs;
 
-import com.guilhermepalma.springsecurityexample.utis.Utils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 /**
- * Classe de Configuração do Spring Security. Extendendo as Configurações da classe depreciada
- * {@link WebSecurityConfigurerAdapter} é possive ter acesso fazer a Autenticação e Autorização da Aplicação.
- * <p>
- * Por mais que seja uma classe Depreciada, existem projetos que ainda utilizam dessa abordagem por estarem trabalhando
- * em versões mais antigas do Spring Boot
+ * A Notation {@link EnableGlobalMethodSecurity} é utilizada para ser possivel fazer o controle de acesso dentro de cada {@link org.springframework.web.bind.annotation.RestController}
  */
 @Configuration
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class WebSecurityConfig {
 
-    final UserDetailsServiceImpl userDetailsService;
-
-    public WebSecurityConfig(UserDetailsServiceImpl userDetailsService) {
-        this.userDetailsService = userDetailsService;
+    @Bean
+    public static PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        // Permite todas as Requests, mesmo sem Autorização:
-        // http.httpBasic().and().authorizeRequests().anyRequest().permitAll();
-
-        // Permite somente as Requests Autorizadas, faz o Controle de Acesso (Autorizção) e desabilita o CSFR
-        http.httpBasic().and()
-                .authorizeRequests()
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // Permite somente as Requests Autorizadas, faz o controle de Acesso (Autorizção) e desabilita o CSFR
+        return http.httpBasic().and().authorizeRequests()
                 // Permite todas as requests GET do Endpoint
-                .antMatchers(HttpMethod.GET,  "/v3/api-docs/**", "/swagger-ui/**").permitAll()
-                // Controle de Permissão à nivel de Endpoint (Prefixo /v1/user)
-                .antMatchers(HttpMethod.POST, "/v1/user/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
-                .and().csrf().disable();
-    }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        // Autenticação em memória a utilizar um Usuario e Senha salvos em memoria pelo Spring Boot
-        // auth.inMemoryAuthentication().withUser("admin").password(passwordEncoder().encode("102030")).roles("ADMIN");
-
-        // Utiliza da Classe UserDetailsService para realizar a autenticação
-        auth.userDetailsService(userDetailsService).passwordEncoder(Utils.passwordEncoder());
+                .antMatchers(HttpMethod.GET, "/v3/api-docs/**", "/swagger-ui/**").permitAll().anyRequest().authenticated().and().csrf().disable().build();
     }
 
 }
