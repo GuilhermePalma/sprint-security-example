@@ -2,6 +2,7 @@ package com.guilhermepalma.springsecurityexample.configs;
 
 import com.guilhermepalma.springsecurityexample.utis.Utils;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -28,9 +29,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // Permite todas as Requests, mesmo sem Autorização:
         // http.httpBasic().and().authorizeRequests().anyRequest().permitAll();
 
-        // Permite somente as Requests Autorizadas e desabilita o CSFR
-        http.httpBasic()
-                .and().authorizeRequests().anyRequest().authenticated()
+        // Permite somente as Requests Autorizadas, faz o Controle de Acesso (Autorizção) e desabilita o CSFR
+        http.httpBasic().and()
+                .authorizeRequests()
+                // Permite todas as requests GET do Endpoint
+                .antMatchers(HttpMethod.GET,  "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                // Controle de Permissão à nivel de Endpoint (Prefixo /v1/user)
+                .antMatchers(HttpMethod.POST, "/v1/user/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
                 .and().csrf().disable();
     }
 
