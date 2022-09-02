@@ -27,6 +27,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator:2.7.3'
 
+	// JWT (Json Web Token)
+	implementation 'com.auth0:java-jwt:4.0.0'
+
 	// DevTools (Hot Reload)
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 

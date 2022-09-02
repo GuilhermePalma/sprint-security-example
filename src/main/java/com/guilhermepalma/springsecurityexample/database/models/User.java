@@ -1,6 +1,9 @@
 package com.guilhermepalma.springsecurityexample.database.models;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -14,9 +17,12 @@ import java.util.UUID;
  * A classe implementada {@link UserDetails} se trata da classe já esperada pelo Spring Security para fazer a
  * autenticação dos usuarios na API
  */
-@Data
 @Entity
 @Table(name = "\"user\"")
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 public class User implements UserDetails, Serializable {
 
     @Id
@@ -32,9 +38,14 @@ public class User implements UserDetails, Serializable {
     @Column(nullable = false)
     private String password;
 
-    @ManyToMany(cascade=CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Roles> roles;
+
+    public User(UUID userId, String username) {
+        this.id = userId;
+        this.username = username;
+    }
 
     // Cargos, Funções de um user
     @Override

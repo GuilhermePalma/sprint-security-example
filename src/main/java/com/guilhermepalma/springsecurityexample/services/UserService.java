@@ -1,11 +1,16 @@
 package com.guilhermepalma.springsecurityexample.services;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.guilhermepalma.springsecurityexample.database.models.User;
 import com.guilhermepalma.springsecurityexample.database.repositories.UserRepository;
 import com.guilhermepalma.springsecurityexample.dto.exceptions.ConflictException;
+import com.guilhermepalma.springsecurityexample.dto.exceptions.NotFoundException;
 import com.guilhermepalma.springsecurityexample.utis.Utils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -50,4 +55,14 @@ public class UserService {
         return user;
     }
 
+    public String generateUserJWT(User userRequest) throws NotFoundException {
+        User user = userRepository.findByIdOrUsername(userRequest.getId(), userRequest.getUsername()).orElseThrow(
+                () -> new NotFoundException("not found user [%s] in registers", userRequest.getUsername())
+        );
+
+        return JWT.create()
+                .withExpiresAt(LocalDateTime.now().plusMinutes(30L).toInstant((ZoneOffset.UTC)))
+                .withSubject(user.getUsername()).withClaim("userId", user.getId().toString())
+                .sign(Algorithm.HMAC256("gna-r21g-ee-t2r-f2g23g"));
+    }
 }

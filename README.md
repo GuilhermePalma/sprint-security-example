@@ -35,3 +35,4 @@ Sempre manter as depedencias atualizadas para que englobe as novas versões com 
 - Guias e Tutoriais
     - [MICHELLI BRITO: Curso Spring Security - Basic Auth](https://www.youtube.com/watch?v=t6prPki7daU)
     - [DANIELE LEÃO: Autenticação e Autorização - Basic Auth](https://www.youtube.com/watch?v=pkIEV2Yls_8)
+    - [GABRIEL GADELHA: Autenticação e Autorização - JWT + Spring Security](https://www.youtube.com/watch?v=PgTZoJCkL_Y)
