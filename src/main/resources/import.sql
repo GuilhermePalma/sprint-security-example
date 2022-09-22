@@ -1,0 +1,3 @@
+# noinspection SqlNoDataSourceInspectionForFile
+INSERT INTO TB_ROLES (NAME) VALUES ('ROLE_USER');
+INSERT INTO TB_ROLES (NAME) VALUES ('ROLE_ADMIN');

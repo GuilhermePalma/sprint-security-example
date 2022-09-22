@@ -1,13 +1,16 @@
 package com.guilhermepalma.springsecurityexample.configs;
 
+import com.guilhermepalma.springsecurityexample.utis.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -25,13 +28,14 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // Permite somente as Requests Autorizadas, faz o controle de Acesso (Autorizção) e desabilita o CSFR
         return http.httpBasic().and().authorizeRequests()
+                .anyRequest().permitAll().and()
                 // Permite todas as requests GET do Endpoint
-                .antMatchers(HttpMethod.GET, "/v3/api-docs/**", "/swagger-ui/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/login").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .addFilterBefore(new AuthenticationFilter("/login", authenticationManager(http.getSharedObject(AuthenticationConfiguration.class))), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new AuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+//                .antMatchers(HttpMethod.GET, "/v3/api-docs/**", "/swagger-ui/**").permitAll()
+//                .antMatchers(HttpMethod.POST, "/login").permitAll()
+//                .anyRequest().authenticated()
+//                .and()
+//                .addFilterBefore(new AuthenticationFilter("/login", authenticationManager(http.getSharedObject(AuthenticationConfiguration.class))), UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(new AuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable().build();
     }
 
@@ -41,6 +45,7 @@ public class WebSecurityConfig {
     }
 
    /*@Bean
+   @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(Utils.passwordEncoder());
     }*/

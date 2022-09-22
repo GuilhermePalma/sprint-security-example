@@ -1,24 +1,26 @@
 package com.guilhermepalma.springsecurityexample.database.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * A classe implementada {@link UserDetails} se trata da classe já esperada pelo Spring Security para fazer a
  * autenticação dos usuarios na API
  */
 @Entity
-@Table(name = "\"user\"")
+@Table(name = "\"TB_USER\"")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -38,9 +40,12 @@ public class User implements UserDetails, Serializable {
     @Column(nullable = false)
     private String password;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Roles> roles;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "TB_USERS_ROLES",
+            joinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "ROLE_NAME", referencedColumnName = "name"))
+    @BatchSize(size = 20)
+    private Set<Roles> roles = new HashSet<>();
 
     public User(UUID userId, String username) {
         this.id = userId;
@@ -49,7 +54,6 @@ public class User implements UserDetails, Serializable {
 
     // Cargos, Funções de um user
     @Override
-
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles;
     }

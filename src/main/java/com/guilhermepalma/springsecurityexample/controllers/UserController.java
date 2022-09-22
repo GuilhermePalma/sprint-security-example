@@ -8,10 +8,12 @@ import com.guilhermepalma.springsecurityexample.dto.exceptions.NotFoundException
 import com.guilhermepalma.springsecurityexample.services.UserService;
 import com.guilhermepalma.springsecurityexample.utis.Utils;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
@@ -27,24 +29,36 @@ public class UserController {
     }
 
     @Operation(summary = "Create user")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
     @PostMapping(value = "v1/user/create", produces = "application/json")
     public CreatedDTO<User> createUsers(@RequestBody Payload<User> users) throws Exception {
         if (Utils.isNullOrEmpty(users.getData())) {
             throw new NotFoundException("not found values in payload");
         }
 
+//        return userService.getUserCreatedDTO(users);
+
         AtomicLong quantityError = new AtomicLong(0);
         List<String> logErrors = new ArrayList<>();
-        List<User> usersCreated = users.getData().stream().parallel().map(v -> {
+        List<User> usersCreated = new ArrayList<>();
+        for (User v : users.getData()) {
             try {
-                return userService.createUser(v);
+                usersCreated.add(userService.createUserV2(v));
             } catch (Exception e) {
                 Long error = quantityError.incrementAndGet();
                 logErrors.add(String.format("[%s] - [%s]", error, e.getMessage()));
                 throw new RuntimeException(e);
             }
-        }).toList();
+        }
+//        List<User> usersCreated = users.getData().stream().parallel().map(v -> {
+//            try {
+//                return userService.createUserV2(v);
+//            } catch (Exception e) {
+//                Long error = quantityError.incrementAndGet();
+//                logErrors.add(String.format("[%s] - [%s]", error, e.getMessage()));
+//                throw new RuntimeException(e);
+//            }
+//        }).toList();
 
         CreatedDTO<User> createdDTO = new CreatedDTO<>(usersCreated);
         createdDTO.setErrors(quantityError.get());
@@ -54,7 +68,7 @@ public class UserController {
     }
 
     @Operation(summary = "Get Users")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("v1/user")
     public ListView<User> getAllUsers(@RequestParam(required = false) List<UUID> userId,
                                       @RequestParam(required = false) List<String> username,
@@ -62,4 +76,22 @@ public class UserController {
         return new ListView<>(new ArrayList<>(userService.getUsers(userId, username, name)));
     }
 
+//    @Operation(summary = "Get Users Detailed")
+////    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @GetMapping("v1/user/detailed")
+//    public ListView<User> getAllUsersDetailed(@RequestParam(required = false) UUID userId,
+//                                              @RequestParam(required = false) String username,
+//                                              @RequestParam(required = false) String name) throws NotFoundException {
+//        return new ListView<>(new ArrayList<>(Collections.singleton(userService.getDetailedUsers(userId, username, name))));
+//    }
+
+    @Operation(summary = "Get One User Detailed")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("v1/user/detailed")
+    public ListView<User> getAllUsersDetailed(@RequestParam(required = false) UUID userId,
+                                              @RequestParam(required = false) String username) throws NotFoundException {
+        return new ListView<>(new ArrayList<>(Collections.singleton(userService.getDetailedUser(userId, username))));
+    }
+
 }
+
