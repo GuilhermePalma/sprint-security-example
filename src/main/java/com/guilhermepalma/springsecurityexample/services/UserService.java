@@ -2,7 +2,9 @@ package com.guilhermepalma.springsecurityexample.services;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.guilhermepalma.springsecurityexample.database.models.Roles;
 import com.guilhermepalma.springsecurityexample.database.models.User;
+import com.guilhermepalma.springsecurityexample.database.repositories.RolesRepository;
 import com.guilhermepalma.springsecurityexample.database.repositories.UserRepository;
 import com.guilhermepalma.springsecurityexample.dto.exceptions.ConflictException;
 import com.guilhermepalma.springsecurityexample.dto.exceptions.NotFoundException;

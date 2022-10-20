@@ -3,6 +3,7 @@ package com.guilhermepalma.springsecurityexample.utis;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Collection;
 import java.util.List;
 
 public class Utils {
