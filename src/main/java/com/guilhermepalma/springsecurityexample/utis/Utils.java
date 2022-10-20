@@ -26,7 +26,7 @@ public class Utils {
      *
      * @see #isNull(Object)
      */
-    public static boolean isNullOrEmpty(List<?> list) {
+    public static boolean isNullOrEmpty(Collection<?> list) {
         return isNull(list) || list.isEmpty();
     }
 

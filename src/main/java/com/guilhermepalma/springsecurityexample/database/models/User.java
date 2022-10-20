@@ -9,8 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -27,6 +26,7 @@ public class User implements UserDetails, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ID", unique = true, nullable = false, columnDefinition = "uuid")
     private UUID id;
 
     @Column(nullable = false)
@@ -38,14 +38,10 @@ public class User implements UserDetails, Serializable {
     @Column(nullable = false)
     private String password;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Roles> roles;
 
-    public User(UUID userId, String username) {
-        this.id = userId;
-        this.username = username;
-    }
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER, targetEntity = Roles.class)
+    private Set<Roles> roles;
+
 
     // Cargos, Funções de um user
     @Override

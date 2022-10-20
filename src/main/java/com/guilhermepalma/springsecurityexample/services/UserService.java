@@ -20,21 +20,44 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final RolesRepository rolesRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, RolesRepository rolesRepository) {
         this.userRepository = userRepository;
+        this.rolesRepository = rolesRepository;
     }
 
     public User createUser(User user) throws Exception {
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+        if (Utils.isNull(user)) {
+            throw new ConflictException("user can't be null");
+        } else if (userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new ConflictException("user [%s] already exists", user.getUsername());
         }
 
-        user.setPassword(Utils.passwordEncoder().encode(user.getPassword()));
-        User createdUser = userRepository.save(user);
-        createdUser.setPassword(null);
+        checkUserCredential(user);
 
-        return createdUser;
+        user.setPassword(Utils.passwordEncoder().encode(user.getPassword()));
+        return userRepository.save(user);
+    }
+
+    private void checkUserCredential(User user) {
+        if (!Utils.isNullOrEmpty(user.getRoles())) {
+            List<Roles> databaseRoles = rolesRepository.findAll();
+
+            if (!Utils.isNullOrEmpty(databaseRoles)) {
+                Set<Roles> oldUserRole = user.getRoles();
+
+                Set<Roles> newUserRoles = new HashSet<>();
+
+                for (Roles role : oldUserRole) {
+                    Roles updatedRole = databaseRoles.stream()
+                            .filter(v -> v.getName().equals(role.getName())).findFirst().orElse(role);
+                    newUserRoles.add(updatedRole);
+                }
+
+                user.setRoles(newUserRoles);
+            }
+        }
     }
 
     public Set<User> getUsers(List<UUID> userId, List<String> username, List<String> name) {
